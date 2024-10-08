@@ -13,7 +13,7 @@ tokenizer = AutoTokenizer.from_pretrained(peft_model_path)
 # In kích thước từ vựng trước khi setup_chat_format
 print("----------------Vocab size before setup_chat_format:", len(tokenizer))
 
-# Tải base model trước (GPT-2 hoặc base model khác)
+# Tải base model trước 
 base_model = AutoModelForCausalLM.from_pretrained(base_model_path, 
                                                   torch_dtype=torch.bfloat16,
                                                   low_cpu_mem_usage=True)

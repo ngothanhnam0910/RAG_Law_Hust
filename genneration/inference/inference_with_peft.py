@@ -7,7 +7,7 @@ from transformers import AutoTokenizer, pipeline, AutoModelForCausalLM, BitsAndB
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from peft import AutoPeftModelForCausalLM, PeftConfig
 from datasets import load_dataset
-
+import time
 
 
 eval_dataset = load_dataset("json", data_files="test_dataset.json",split="train")
@@ -32,16 +32,26 @@ tokenizer = AutoTokenizer.from_pretrained(peft_model_path)
 # load into pipeline
 pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
+
 # Test on sample
-prompt = pipe.tokenizer.apply_chat_template(eval_dataset[6]["messages"][:2], tokenize=False, add_generation_prompt=True)
+prompt = pipe.tokenizer.apply_chat_template(eval_dataset[7]["messages"][:2], tokenize=False, add_generation_prompt=True)
+
+t1 = time.time()
 outputs = pipe(prompt, 
                max_new_tokens=1024, 
                do_sample=False,
-               temperature=0.1, 
+               temperature=0, 
                top_k=50,
                top_p=0.1, 
                eos_token_id=pipe.tokenizer.eos_token_id, 
                pad_token_id=pipe.tokenizer.pad_token_id)
 
-print(f"Original Answer:\n{eval_dataset[6]['messages'][2]['content']}")
-print(f"Generated Answer:\n{outputs[0]['generated_text'][len(prompt):].strip()}")
+t2 = time.time()
+print(f"Total time: {t2 - t1}")
+
+# print(f"Original Answer:\n{eval_dataset[6]['messages'][2]['content']}")
+output = outputs[0]['generated_text'][len(prompt):].strip()
+final_output = output.split("system")[0].strip()
+print(f"-------------Generated Answer:\n{final_output}")
+
+# print(f"----------Generated answer: {outputs}")
