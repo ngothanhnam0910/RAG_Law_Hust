@@ -1,0 +1,6 @@
+mlflow==2.11.0
+transformers==4.35.2
+peft==0.8.2
+bitsandbytes==0.42.0
+accelerate==0.27.2
+datasets==2.17.1
