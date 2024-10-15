@@ -1,5 +1,5 @@
 # model=$PWD/{args.output_dir} # path to model
-model=/home/namnt/md1/mlflow/DATN/07_10_2024/merge_model # path to model
+model=/home/namnt/md1/mlflow/DATN/09_10_2024/merge_model # path to model
 num_shard=1             # number of shards
 max_input_length=1024   # max input length
 max_total_tokens=2048   # max total tokens

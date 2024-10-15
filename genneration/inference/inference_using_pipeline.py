@@ -11,7 +11,7 @@ import time
 eval_dataset = load_dataset("json", data_files="test_dataset.json", split="train")
 
 # Path to the merged model (the model with LoRA layers merged into the base model)
-merged_model_path = "/home/namnt/md1/mlflow/DATN/07_10_2024/merge_model"
+merged_model_path = "/home/namnt/md1/mlflow/DATN/09_10_2024/merge_model"
 
 # Load the merged model using AutoModelForCausalLM
 model = AutoModelForCausalLM.from_pretrained(
@@ -27,8 +27,15 @@ tokenizer = AutoTokenizer.from_pretrained(merged_model_path)
 # Load into the pipeline for text generation
 pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
+eval_dataset = load_dataset("json", data_files="test_dataset.json",split="train")
+
+list_data_test = []
+for i in range(50):
+    messages = eval_dataset[i]["messages"][:2]
+    list_data_test.append(messages)
+
 # Test on a sample
-prompt = pipe.tokenizer.apply_chat_template(eval_dataset[8]["messages"][:2], tokenize=False, add_generation_prompt=True)
+prompt = pipe.tokenizer.apply_chat_template(list_data_test, tokenize=False, add_generation_prompt=True)
 
 # Generate text based on the sample
 t1 = time.time()
@@ -44,7 +51,10 @@ t2 = time.time()
 print(f"Total time: {t2 - t1}")
 # Print original and generated answers
 # print(f"Original Answer:\n{eval_dataset[4]['messages'][2]['content']}")
-output = outputs[0]['generated_text'][len(prompt):].strip()
-final_output = output.split("system")[0].strip()
-print(f"-------------Generated Answer:\n{final_output}")
+# output = outputs[0]['generated_text'][len(prompt):].strip()
+
+# print(f"output: {output}")
+
+# final_output = output.split("system")[0].strip()
+# print(f"-------------Generated Answer:\n{final_output}")
 # print(f"----------Generated answer: {outputs}")
