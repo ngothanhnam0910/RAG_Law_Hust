@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import torch
 from pymilvus import connections, Collection
 from pymilvus.model.hybrid import BGEM3EmbeddingFunction
 
@@ -13,7 +12,8 @@ class QueryRequest(BaseModel):
 class QueryManager:
     def __init__(self, collection_name, embedding_model_name, host='localhost', port='19530'):
         self.collection_name = collection_name
-        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        #self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        self.device = "cpu"
         self.embedding_model_name = embedding_model_name
         self.embedding_model = self._initialize_embedding_model(self.embedding_model_name)
         self.host = host
@@ -26,7 +26,7 @@ class QueryManager:
         return BGEM3EmbeddingFunction(
             model_name=model_name,
             use_fp16=False,
-            device=self.device)
+            device="cpu")
 
     def connect_to_server(self):
         print(f"Connecting to Milvus server at {self.collection_name}:{self.collection_name}")
@@ -65,7 +65,8 @@ class QueryManager:
 
 # Initialize QueryManager for the collection 'Law_VN'
 collection_name = "Hust_Law"
-embedding_model_name = "/point/namnt/md1/NAMNT_DA2/checkpoint/checkpoint_fine_tune2/checkpoint-1000"
+#embedding_model_name = "/point/namnt/md1/NAMNT_DA2/checkpoint/checkpoint_fine_tune2/checkpoint-1000"
+embedding_model_name = "/app/checkpoint_retriever/checkpoint-1000"
 query_manager = QueryManager(collection_name=collection_name, 
                                 embedding_model_name=embedding_model_name)
 
