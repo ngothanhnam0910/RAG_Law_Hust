@@ -1,3 +1,7 @@
+import numpy as np
+from tqdm import tqdm
+import json
+import torch
 import pymilvus
 from pymilvus import (
     MilvusClient, utility, connections,
@@ -5,10 +9,6 @@ from pymilvus import (
     Collection
 )
 from pymilvus.model.hybrid import BGEM3EmbeddingFunction
-import numpy as np
-from tqdm import tqdm
-import json
-import torch
 
 class MilvusManager:
     def __init__(self, collection_name, embedding_model_name, host='localhost', port='19530'):
@@ -91,7 +91,7 @@ class DataProcessor:
 
             for article in articles:
                 title = article["title"]
-                text = article["text"]
+                text = title + ". " + article["text"] 
                 trimmed_text = self.trim_string(text)
 
                 if len(text) != 0:
